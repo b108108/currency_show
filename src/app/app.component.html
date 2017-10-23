@@ -1,0 +1,20 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<h2>Currency</h2>
+
+
+    <select (change)="onSelect($event.target.value)">
+      <option *ngFor="let item of valuta" [value]="item.id">{{item.name}}</option>
+    </select>
+    <div>selection={{selectedValuta.name}}</div>
+    
+<input type="date" #startday placeholder="curdate"/>
+<input type="date" #endday placeholder="curdate"/>
+<button (click)="downloadRange(startday.value, endday.value)">Output</button>
+
+<!-- 
+<ul class="currency">
+  <li *ngFor="let item of valuta">
+    <span class="badge">{{item.id}}</span> {{item.name}}
+  </li>
+</ul>
+-->
