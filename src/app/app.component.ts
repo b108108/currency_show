@@ -43,7 +43,11 @@ export class AppComponent {
       {Cur_ID: 145, Date: "2017-10-04T00:00:00", Cur_OfficialRate: 1.9655},
       {Cur_ID: 145, Date: "2017-10-05T00:00:00", Cur_OfficialRate: 1.9650},
       {Cur_ID: 145, Date: "2017-10-06T00:00:00", Cur_OfficialRate: 1.9629},
-      {Cur_ID: 145, Date: "2017-10-07T00:00:00", Cur_OfficialRate: 1.9684}
+      {Cur_ID: 145, Date: "2017-10-07T00:00:00", Cur_OfficialRate: 1.9684},
+      {Cur_ID: 19, Date: "2017-10-04T00:00:00", Cur_OfficialRate: 2.9655},
+      {Cur_ID: 19, Date: "2017-10-05T00:00:00", Cur_OfficialRate: 2.9650},
+      {Cur_ID: 19, Date: "2017-10-06T00:00:00", Cur_OfficialRate: 2.9629},
+      {Cur_ID: 19, Date: "2017-10-07T00:00:00", Cur_OfficialRate: 2.9684},
     ];
   
   public showrow: cursy[] = [
@@ -58,26 +62,38 @@ export class AppComponent {
   }
 
   public selectedValuta: cursy = this.valuta[0];
+  public selItemValuta = 0;
   onSelect(itemId) {
-      this.selectedValuta = null;
-      for (let i = 0; i < this.valuta.length; i++) {
+      this.selectedValuta = this.valuta[itemId];
+      /*for (let i = 0; i < this.valuta.length; i++) {
         if (this.valuta[i].code == itemId) {
           this.selectedValuta = this.valuta[i];
         }
-      }
+      }*/
+  }
+  
+  onSelectTable(itemId) {
+      this.selItemValuta = itemId;
   }
 
   addrow() {
-    if (this.countRow < 3) {
+    if (this.countRow < 2) {
       this.countRow++;
-      this.showrow[this.countRow] = this.valuta[this.countRow];
+      this.showrow[this.countRow] = this.valuta[this.selItemValuta];
     }
   }
   
   removerow() {
     if (this.countRow > 0) {
-      this.showrow[this.countRow] = null;
-      this.countRow--;
+      for (let i = 0, j = this.countRow; i <= j; i++) {
+        if (this.showrow[i].name == this.valuta[this.selItemValuta].name) {
+          this.showrow[i] = null;
+          //this.showrow.splice(i,1);
+          this.countRow--;
+        }
+      }
+      
+      
     }
   }
   
