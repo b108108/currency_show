@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 import {HttpClientModule} from '@angular/common/http';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import {JsonService} from './json.service';
 import {Observable} from 'rxjs/Rx';
-
-import { JsonService } from './json.service';
+import {Subscription} from 'rxjs';
 
 // Import RxJs required methods
 import 'rxjs/add/operator/map';
@@ -11,63 +10,85 @@ import 'rxjs/add/operator/catch';
 
 export class cursy {
   id: number;
+  code: number;
   name: string;
+}
+
+export class jsonD {
+  Cur_ID: number;
+  Date: string;
+  Cur_OfficialRate: number;
 }
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  providers: [JsonService]
 })
 
 export class AppComponent {
-  data: Array<{id: number, date: string, num: string}>;
-  results: string[];
-  public valuta: cursy[] = [
-      { id: 145, name: 'USD' },
-      { id: 19, name: 'EUR' },
-      { id: 141, name: 'RUR' }
-    ];
+  //data: Array<{"Cur_ID": number, "Date":string, "Cur_OfficialRate": number}>;
+  jsondata: any;
+  
+  results: Array<{}>;
 
-  constructor(private http: Http, private jsonService: JsonService) {
-    this.data = [
-      {id: 145, date: '20/10/2017', num: '21'},
-      {id: 19, date: '21/10/2017', num: '10'},
-      {id: 141, date: '21/10/2017', num: '35'},
-      {id: 145, date: '21/10/2017', num: '22'},
+  public valuta: cursy[] = [
+      { id: 0, code: 145, name: 'USD' },
+      { id: 1, code: 19, name: 'EUR' },
+      { id: 2, code: 141, name: 'RUR' }
     ];
+  
+  public data: jsonD[] = [
+      {Cur_ID: 145, Date: "2017-10-04T00:00:00", Cur_OfficialRate: 1.9655},
+      {Cur_ID: 145, Date: "2017-10-05T00:00:00", Cur_OfficialRate: 1.9650},
+      {Cur_ID: 145, Date: "2017-10-06T00:00:00", Cur_OfficialRate: 1.9629},
+      {Cur_ID: 145, Date: "2017-10-07T00:00:00", Cur_OfficialRate: 1.9684}
+    ];
+  
+  public showrow: cursy[] = [
+    { id: 0, code: 145, name: 'USD' }
+  ];
+  
+  private response: Subscription;
+  private countRow: number;
+
+  constructor(private jsonService: JsonService) {
+    this.countRow = 0;
   }
 
   public selectedValuta: cursy = this.valuta[0];
   onSelect(itemId) {
       this.selectedValuta = null;
       for (let i = 0; i < this.valuta.length; i++) {
-        if (this.valuta[i].id == itemId) {
+        if (this.valuta[i].code == itemId) {
           this.selectedValuta = this.valuta[i];
         }
       }
   }
 
+  addrow() {
+    if (this.countRow < 3) {
+      this.countRow++;
+      this.showrow[this.countRow] = this.valuta[this.countRow];
+    }
+  }
+  
+  removerow() {
+    if (this.countRow > 0) {
+      this.showrow[this.countRow] = null;
+      this.countRow--;
+    }
+  }
+  
   downloadRange(startday, endday) {
-
-    const uri = 'http://www.nbrb.by/API/ExRates/Rates/Dynamics/' + this.selectedValuta.id;
-    const param = { 'startDate': startday.toUTCString(), 'endDate': endday.toUTCString() };
-    console.log(startday + '---' + endday);
-    const headers      = new Headers({ 'Content-Type': 'application/json' });
-
-        this.jsonService.getCurrency(uri, param).subscribe(data => this.results = data);
-    /*
-    this.http.get(uri, param )
-
-        .map(res => res.json())
-        .subscribe(res => {
-            this.results = res.data;
-
+        this.jsonService.getCurrency(startday, endday, this.selectedValuta.code)
+        .subscribe(data => {
+            this.jsondata = data;
+             console.log(data);
         },
         err => {
             console.log("Error download contacts");
         });
-     */
   }
-
 }

@@ -3,18 +3,23 @@
 
 
     <select (change)="onSelect($event.target.value)">
-      <option *ngFor="let item of valuta" [value]="item.id">{{item.name}}</option>
+      <option *ngFor="let item of valuta" [value]="item.code">{{item.name}}</option>
     </select>
     <div>selection={{selectedValuta.name}}</div>
     
 <input type="date" #startday placeholder="curdate"/>
 <input type="date" #endday placeholder="curdate"/>
-<button (click)="downloadRange(startday.value, endday.value)">Output</button>
+<button *ngIf="show" (click)="show=!show">Show Table</button>
+<button *ngIf="!show" (click)="downloadRange(startday.value, endday.value)">Show Chart</button>
 
-<!-- 
-<ul class="currency">
-  <li *ngFor="let item of valuta">
-    <span class="badge">{{item.id}}</span> {{item.name}}
-  </li>
-</ul>
--->
+<button (click)="addrow()">Add row</button>
+<button (click)="removerow()">Remove row</button>
+<table>
+<tr>
+	<th *ngFor="let item of showrow"> {{item.name}} </th>
+</tr>
+<tr *ngFor="let str of data">
+	<td>{{str.Date}}{{ str.Cur_OfficialRate }}</td>
+</tr>
+</table>
+

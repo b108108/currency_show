@@ -1,10 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import {HttpClientModule} from '@angular/common/http';
-import { Http } from '@angular/http';
-
+import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
-import { JsonService } from './json.service';
 
 @NgModule({
   declarations: [
@@ -12,9 +9,7 @@ import { JsonService } from './json.service';
   ],
   imports: [
     BrowserModule,
-    HttpClientModule,
-    Http,
-    JsonService
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
